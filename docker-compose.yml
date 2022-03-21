@@ -5,18 +5,20 @@ services:
     build: 
       context: node
     container_name: app
+    platform: linux/amd64
     image: franciscpd/node-app
     entrypoint: dockerize -wait tcp://db:3306 -timeout 30s docker-entrypoint.sh
     command: node index.js
     networks:
       - node-network
     volumes:
-      - ./node:/usr/src/app
+      - node-app:/usr/src/app
     tty: true
     depends_on:
       - db
 
   nginx:
+    platform: linux/amd64
     build: 
       context: nginx
     container_name: nginx
@@ -47,3 +49,6 @@ services:
 networks:
   node-network:
     driver: bridge
+
+volumes:
+  node-app:
